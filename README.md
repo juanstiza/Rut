@@ -1,3 +1,20 @@
+### Installation
+
+#### Composer
+
+```
+composer require juanstiza/rut master-dev
+```
+
+or copy in your `composer.json` file
+```json
+{
+    "require": {
+        "juanstiza/rut": "master-dev"
+    }
+}
+```
+
 ### Usage
 
 ```php
