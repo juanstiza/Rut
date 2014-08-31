@@ -3,6 +3,7 @@
     "description": "Chilean Rut validator",
     "minimum-stability": "dev",
     "license": "MIT",
+    "keywords":["rut","chile","validator"],
     "authors": [
         {
             "name": "Juan Stiza",
