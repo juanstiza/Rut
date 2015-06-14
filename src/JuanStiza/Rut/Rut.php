@@ -72,4 +72,15 @@ class Rut {
         return chr($s?$s+47:75);
     }
 
+    /**
+     * Return formated string
+     * @param  string $numberSeparator Decimal separator
+     * @param  string $digitSeparator  Verifying digit separator
+     * @return string                  Formated Rut, defaults: xx.xxx.xxx-d
+     */
+    public function format($numberSeparator = '.', $digitSeparator = '-')
+    {
+      return number_format($this->rut, 0, '', $numberSeparator) . $digitSeparator . $this->dv;
+    }
+
 }

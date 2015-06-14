@@ -43,7 +43,7 @@ class RutTest extends PHPUnit_Framework_TestCase{
         $this->assertFalse($rut->isValid);
     }
 
-    public function testFormats()
+    public function testValidation()
     {
 
         $rut = new Rut('12.53213-k');
@@ -60,6 +60,18 @@ class RutTest extends PHPUnit_Framework_TestCase{
 
         $this->setExpectedException('Exception','Rut has wrong length.');
         $rut = new Rut('3');
+
+    }
+
+    public function testReturnFormat()
+    {
+
+      $rut = new Rut(242327713);
+      $this->assertTrue($rut->format() == '24.232.771-3');
+
+      $this->assertTrue($rut->format('','-') == '24232771-3');
+
+      $this->assertTrue($rut->format('','') == '242327713');
 
     }
 

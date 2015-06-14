@@ -43,5 +43,12 @@ Find the verifying digit for a rut
 print_r(Rut::findDV(1234));
 /* 3 */
 
+Return formated string:
+$rut = new Rut('24232771-3');
+print_r($rut->format());
+/* "24.232.771-3" */
+print_r($rut->format('','-'));
+/* "24232771-3" */
+
 
 ```
