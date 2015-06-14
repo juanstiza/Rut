@@ -5,73 +5,65 @@ namespace JuanStiza\Rut;
 class Rut {
 
     /**
-     * El dígito verificador del Rut.
+     * Rut's verifying digit
      * @var string
      */
     public $dv = '';
 
     /**
-     * El Rut.
+     * The Rut
      * @var integer
      */
     public $rut = null;
 
     /**
-     * Determina si el Rut es válido.
+     * Determins if Rut is valid.
      * @var bool
      */
     public $isValid = false;
 
     /**
-     * Creo un Rut a partir de un string.
+     * Contstruct
+     * @param string $rut The rut string
+     * @param string $dv  The verifying digit
      */
     public function __construct($rut)
     {
         $args = func_get_args();
+        /**
+         * If we don't have a verifying digit.
+         */
         if (count($args) == 1)
         {
-            /**
-             * Para el caso de un Rut escrito con puntos y guión.
-             * Ej.: 12.345.678-9
-             */
-            if (preg_match('/([0-9\.]+)(\-)([0-9kK])/',$args[0],$matches))
-            {
-                $this->rut = (integer) $matches[1];
-                $this->dv = $matches[3];
-            /**
-             * Para el caso en el que no escribimos guión, NI puntos.
-             * Ej.: 12345678K
-             */
-            }
-            elseif (preg_match('/([0-9]+)([0-9kK])/', $args[0], $matches))
-            {
-                $this->rut = (integer) $matches[1];
-                $this->dv = $matches[2];
-            }
+            $sanitize = trim((string) $args[0]);
+            $sanitize = str_replace( '.', '',$sanitize);
+            $sanitize = str_replace( '-', '',$sanitize);
+            $this->dv = substr($sanitize, -1);
+            $this->rut = substr($sanitize, 0, strlen($sanitize) - 1);
+            if (strlen($this->rut) < 1) throw new \Exception("Rut has wrong length.");
         }
+        // We have it
         else
         {
-            /**
-             * Para el caso donde se especifica el dígito verificador.
-             */
             $rut = $args[0];
-            $digitoVerificador = (string) $args[1];
-            if (!preg_match('/[0-9kK]/',$digitoVerificador)) throw new Exception('Wrong format!');
-            if (!is_integer((integer)$rut)) throw new Exception('Must be integer');
+            $this->dv = (string) $args[1];
+            if (!is_integer((integer) $rut))
+              throw new \Exception('Rut '.$this->rut.' must be integer');
             $this->rut = $rut;
-            $this->dv = $digitoVerificador;
         }
+        if (!preg_match('/[0-9kK]/',$this->dv))
+          throw new \Exception('Verifying digit: '.$this->dv.' has wrong format');
 
-        /* Definimos si el Rut es válido. */
-        $this->isValid = $this->dv == self::validate($this->rut);
+        $this->isValid = $this->dv == self::findDV((integer) $this->rut);
+        return $this;
     }
 
     /**
-     * Devuelve el dígito verificador para un determinado Rut.
-     * @param $rut
+     * Returns the verifying digit for a partial Rut.
+     * @param $rut  integer   The partial Rut
      * @return string
      */
-    private function validate($rut)
+    public static function findDV($rut)
     {
         $s = 1;
         for ($i = 0;$rut != 0; $rut /= 10) {
@@ -80,15 +72,4 @@ class Rut {
         return chr($s?$s+47:75);
     }
 
-    /**
-     * Devuelve el dígito verificador para determinado rut.
-     * @param $rut
-     * @return string
-     */
-    public static function getDigit($rut)
-    {
-        return self::validate((integer) $rut);
-    }
-
 }
-
